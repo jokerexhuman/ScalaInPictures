@@ -1,6 +1,8 @@
 
 import org.scalatest._
 
+import scala.util.Try
+
 
 class ListSpec extends FlatSpec with Matchers {
 
@@ -50,13 +52,23 @@ class ListSpec extends FlatSpec with Matchers {
 
   it should "List filter" in {
     val list3Int: List[Int] = List(10, 20, 30)
-    list3Int.filter(_ <= 10) shouldBe List(10)
+    list3Int.filter(_ < 10) shouldBe List()
     list3Int.filter(_ > 10) shouldBe List(20, 30)
 
     val emptyList: List[Int] = List.empty
-    emptyList.filter(_ <= 10) shouldBe List()
+    emptyList.filter(_ < 10) shouldBe List()
     emptyList.filter(_ > 10) shouldBe List()
   }
+
+  it should "List reduce" in {
+    val list3Int: List[Int] = List(10, 20, 30)
+    list3Int.reduce(_+_) shouldBe 60
+
+    val emptyList: List[Int] = List.empty
+    Try(emptyList.reduce(_+_)).isFailure shouldBe true
+    emptyList.reduceOption(_+_) shouldBe None
+  }
+
 
 
   it should "List flatten 3x" in {
