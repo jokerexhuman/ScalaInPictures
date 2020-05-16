@@ -62,13 +62,12 @@ class ListSpec extends FlatSpec with Matchers {
 
   it should "List reduce" in {
     val list3Int: List[Int] = List(10, 20, 30)
-    list3Int.reduce(_+_) shouldBe 60
+    list3Int.reduce(_ + _) shouldBe 60
 
     val emptyList: List[Int] = List.empty
-    Try(emptyList.reduce(_+_)).isFailure shouldBe true
-    emptyList.reduceOption(_+_) shouldBe None
+    Try(emptyList.reduce(_ + _)).isFailure shouldBe true
+    emptyList.reduceOption(_ + _) shouldBe None
   }
-
 
 
   it should "List flatten 3x" in {

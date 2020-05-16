@@ -81,6 +81,21 @@ class OptionSpec extends FlatSpec with Matchers {
     noneString.filter(_ != string) shouldBe None
   }
 
+  it should "Option getOrElse" in {
+    val orange = Orange(13, "Salustiana")
+    Some(orange).getOrElse(Orange(14, "Other")) shouldBe orange
+
+    val noneOrange: Option[Orange] = None
+    noneOrange.getOrElse(Orange(14, "Other")) shouldBe Orange(14, "Other")
+
+    val string: String = "Hello"
+    Some(string).getOrElse("") shouldBe string
+
+    val noneString: Option[String] = None
+    noneString.getOrElse("") shouldBe ""
+  }
+
+
   it should "Option flatten 3x" in {
     val orange: Orange = Orange(13, "Salustiana")
 
