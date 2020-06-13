@@ -3,10 +3,24 @@ import org.scalatest._
 
 import scala.util.Try
 
+object ListSpec {
+
+  /**
+   * DBMS ( Database Management System)
+   */
+  case class DBMS(name: String, databases: List[Database])
+
+  case class Database(name: String, tables: List[Table])
+
+  case class Table(name: String, columns: List[String])
+
+}
 
 class ListSpec extends FlatSpec with Matchers {
 
-  it should "List create" in {
+
+  //todo  add new example for Database
+  it should "List create numbers" in {
 
     val list0Int: List[Int] = Nil
     list0Int shouldBe List()
@@ -23,7 +37,7 @@ class ListSpec extends FlatSpec with Matchers {
 
   }
 
-  it should "List for map" in {
+  it should "List for map numbers" in {
 
     val list3Int: List[Int] = List(10, 20, 30)
     list3Int.map(_ + 2) shouldBe List(12, 22, 32)
@@ -33,7 +47,7 @@ class ListSpec extends FlatSpec with Matchers {
   }
 
 
-  it should "List flatten" in {
+  it should "List flatten numbers" in {
     val listNested3Int: List[List[Int]] = List(List(10), List(20, 30))
     listNested3Int.flatten shouldBe List(10, 20, 30)
 
@@ -50,7 +64,7 @@ class ListSpec extends FlatSpec with Matchers {
   }
 
 
-  it should "List filter" in {
+  it should "List filter numbers" in {
     val list3Int: List[Int] = List(10, 20, 30)
     list3Int.filter(_ < 10) shouldBe List()
     list3Int.filter(_ > 10) shouldBe List(20, 30)
@@ -60,7 +74,7 @@ class ListSpec extends FlatSpec with Matchers {
     emptyList.filter(_ > 10) shouldBe List()
   }
 
-  it should "List reduce" in {
+  it should "List reduce numbers" in {
     val list3Int: List[Int] = List(10, 20, 30)
     list3Int.reduce(_ + _) shouldBe 60
 
@@ -69,8 +83,13 @@ class ListSpec extends FlatSpec with Matchers {
     emptyList.reduceOption(_ + _) shouldBe None
   }
 
+  //todo add foldLeft example with empty list ( fold is big brother reduce)
+  //todo add headOption , not using head (example)
+  //todo  bad style  example if(list.isEmpty) list.head else ??? good stile
+  // todo add flatMap on List[Option[_]] //some magic
 
-  it should "List flatten 3x" in {
+
+  it should "List flatten 3x numbers" in {
     val listDeepNested4Int: List[List[List[Int]]] = List(List(List(1, 1), List(2)), Nil, List(List(3), List(4)), Nil)
 
     listDeepNested4Int.flatten shouldBe List(List(1, 1), List(2), List(3), List(4))

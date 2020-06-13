@@ -1,6 +1,8 @@
 
 import org.scalatest._
 
+import scala.util.Try
+
 object OptionSpec {
 
   case class Orange(size: Int, variety: String) {
@@ -18,6 +20,8 @@ class OptionSpec extends FlatSpec with Matchers {
   import OptionSpec._
 
   it should "Option for null" in {
+
+    //option is box close or open (open empty or open non empty)
 
     val orange: Orange = Orange(13, "Salustiana")
     Option(orange) shouldBe Some(orange)
@@ -93,7 +97,16 @@ class OptionSpec extends FlatSpec with Matchers {
 
     val noneString: Option[String] = None
     noneString.getOrElse("") shouldBe ""
+
+    // get not using!!!
+    Try(noneString.get).isFailure shouldBe true
   }
+
+  //todo  bad style  example if(opt.isEmpty) opt.get else ??? good stile map match  ...flatMap
+
+  //todo add orElse
+
+  //todo add toList
 
 
   it should "Option flatten 3x" in {
