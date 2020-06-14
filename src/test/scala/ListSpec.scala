@@ -18,8 +18,8 @@ object ListSpec {
 
 class ListSpec extends FlatSpec with Matchers {
 
+  import ListSpec._
 
-  //todo  add new example for Database
   it should "List create numbers" in {
 
     val list0Int: List[Int] = Nil
@@ -63,6 +63,16 @@ class ListSpec extends FlatSpec with Matchers {
     // flatMap = flatten + map
   }
 
+  it should "List flatMap " in {
+
+    val db = Database("airports", tables = List(Table("client", columns = List("id", "name")), Table("city", columns = List("id", "name", "country"))))
+
+    val tables: List[Table] = db.tables
+    tables.flatMap(_.columns) shouldBe List("id", "name", "id", "name", "country")
+
+    // flatMap = flatten + map
+  }
+
 
   it should "List filter numbers" in {
     val list3Int: List[Int] = List(10, 20, 30)
@@ -74,25 +84,64 @@ class ListSpec extends FlatSpec with Matchers {
     emptyList.filter(_ > 10) shouldBe List()
   }
 
-  it should "List reduce numbers" in {
+  it should "List reduceLeft numbers" in {
     val list3Int: List[Int] = List(10, 20, 30)
-    list3Int.reduce(_ + _) shouldBe 60
+    list3Int.reduceLeft(_ + _) shouldBe 60
 
     val emptyList: List[Int] = List.empty
-    Try(emptyList.reduce(_ + _)).isFailure shouldBe true
+    Try(emptyList.reduceLeft(_ + _)).isFailure shouldBe true
     emptyList.reduceOption(_ + _) shouldBe None
   }
 
-  //todo add foldLeft example with empty list ( fold is big brother reduce)
-  //todo add headOption , not using head (example)
-  //todo  bad style  example if(list.isEmpty) list.head else ??? good stile
-  // todo add flatMap on List[Option[_]] //some magic
+  it should "List foldLeft numbers" in {
+    // fold is big brother reduce
+    val list3Int: List[Int] = List(10, 20, 30)
+    list3Int.foldLeft("")(_ + _) shouldBe "102030"
+
+    val emptyList: List[Int] = List.empty
+    emptyList.foldLeft("")(_ + _) shouldBe ""
+  }
+
+  it should "List headOption numbers" in {
+    // fold is big brother reduce
+    val list3Int: List[Int] = List(10, 20, 30)
+    list3Int.headOption shouldBe Some(10)
+
+    val emptyList: List[Int] = List.empty
+    emptyList.headOption shouldBe None
+
+    // head not using!!!
+    Try(emptyList.head).isFailure shouldBe true
+  }
+
+  it should "List !!! bad style !!! " in {
+
+
+    val list3Int: List[Int] = List(10, 20, 30)
+    //bad style
+    val head = if (list3Int.nonEmpty) list3Int.head else ???
+    head shouldBe 10
+
+    val emptyList: List[Int] = List.empty
+    //bad style
+    val tryHead = Try(if (emptyList.isEmpty) emptyList.head else ???) // this logic error  !!!  emptyList.isEmpty !!!
+    tryHead.isFailure shouldBe true
+  }
+
+  it should "List[Option[_]] flatten, bit magic" in {
+
+    val list5Option: List[Option[Int]] = List(None, Some(10), Some(20), None, Some(30))
+    list5Option.flatten shouldBe List(10, 20, 30)
+
+    val listNone: List[Option[Int]] = List(None, None, None)
+    listNone.flatten shouldBe List.empty[Int]
+  }
 
 
   it should "List flatten 3x numbers" in {
-    val listDeepNested4Int: List[List[List[Int]]] = List(List(List(1, 1), List(2)), Nil, List(List(3), List(4)), Nil)
+    val listDeepNested4Int: List[List[List[Int]]] = List(List(List(1, 1), Nil, List(2)), Nil, List(List(3), List(4)), Nil)
 
-    listDeepNested4Int.flatten shouldBe List(List(1, 1), List(2), List(3), List(4))
+    listDeepNested4Int.flatten shouldBe List(List(1, 1), Nil, List(2), List(3), List(4))
 
     val listDeepNested0Int: List[List[List[Int]]] = List(List(List()))
     listDeepNested0Int.flatten shouldBe List(List())

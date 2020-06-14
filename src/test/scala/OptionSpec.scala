@@ -102,11 +102,42 @@ class OptionSpec extends FlatSpec with Matchers {
     Try(noneString.get).isFailure shouldBe true
   }
 
-  //todo  bad style  example if(opt.isEmpty) opt.get else ??? good stile map match  ...flatMap
+  it should "Option !!! bad style !!! " in {
 
-  //todo add orElse
+    val someOrange: Option[Orange] = Some(Orange(13, "Salustiana"))
 
-  //todo add toList
+    //bad style
+    val orange = if (someOrange.isDefined) someOrange.get else ???
+    orange shouldBe Orange(13, "Salustiana")
+
+
+    val noneOrange: Option[Orange] = None
+    //bad style
+    val tryOrange = Try(if (noneOrange.isEmpty) noneOrange.get else ???) // this logic error  !!!  noneOrange.isEmpty !!!
+    tryOrange.isFailure shouldBe true
+  }
+
+  it should "Option orElse" in {
+
+    val orange = Orange(13, "Salustiana")
+    Some(orange).orElse(Some(Orange(14, "Other"))) shouldBe Some(orange)
+
+    val noneOrange: Option[Orange] = None
+    noneOrange.orElse(Some(Orange(14, "Other"))) shouldBe Some(Orange(14, "Other"))
+
+  }
+
+  it should "Option toSeq" in {
+
+    val orange = Orange(13, "Salustiana")
+    Some(orange).toSeq shouldBe Seq(orange)
+    Some(orange).toList shouldBe List(orange)
+
+    val noneOrange: Option[Orange] = None
+    noneOrange.toSeq shouldBe Seq.empty[Orange]
+    noneOrange.toList shouldBe Nil
+
+  }
 
 
   it should "Option flatten 3x" in {
