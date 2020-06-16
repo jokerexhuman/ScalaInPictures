@@ -5,6 +5,7 @@ import org.scalatest._
 import scala.util.Try
 import scala.util.Success
 import scala.util.Failure
+import scala.util.control.NonFatal
 
 object TrySpec {
 
@@ -35,12 +36,23 @@ class TrySpec extends FlatSpec with Matchers {
   it should "Try create" in {
     //     Try is Box  => Try (Yellow), Success - Green (with result), Failure - red (with exception)
 
+    //catch NonFatal Throwable
     Try(orange.eat) shouldBe Success(orange)
     Try(stone.eat).isFailure shouldBe true
     println(Try(stone.eat))
     Try(productNoName.eat).isFailure shouldBe true
     println(Try(productNoName.eat))
     Try(productNoName.eat) != Try(stone.eat) shouldBe true
+
+    // but !!!
+    // case _: VirtualMachineError | _: ThreadDeath | _: InterruptedException | _: LinkageError | _: ControlThrowable => false
+    val interruptedException = new InterruptedException
+    try {
+      Try(throw interruptedException).isFailure
+    } catch {
+      case NonFatal(e) => throw e // not be using
+      case fatal => fatal shouldBe interruptedException
+    }
   }
 
   it should "Try for map" in {
