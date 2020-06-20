@@ -69,6 +69,7 @@ class ListSpec extends FlatSpec with Matchers {
 
     val tables: List[Table] = db.tables
     tables.flatMap(_.columns) shouldBe List("id", "name", "id", "name", "country")
+    tables.map(_.columns).flatten shouldBe List("id", "name", "id", "name", "country")
 
     // flatMap = flatten + map
   }
@@ -86,20 +87,35 @@ class ListSpec extends FlatSpec with Matchers {
 
   it should "List reduceLeft numbers" in {
     val list3Int: List[Int] = List(10, 20, 30)
-    list3Int.reduceLeft(_ + _) shouldBe 60
+    list3Int.reduce(_ + _) shouldBe 60
 
     val emptyList: List[Int] = List.empty
     Try(emptyList.reduceLeft(_ + _)).isFailure shouldBe true
     emptyList.reduceOption(_ + _) shouldBe None
   }
 
+  it should "curring " in {
+    def sum(a: Int, b: Int, c: Int) = a + b + c
+
+    def sumCurr(a: Int)(b: Int)(c: Int) = a + b + c
+
+    sumCurr(1)(2)(3) shouldBe (6)
+
+    val add1: Int => Int => Int = sumCurr(1)
+
+    val add3: Int => Int = add1(2)
+
+    add3(3) shouldBe (6)
+  }
+
+
   it should "List foldLeft numbers" in {
     // fold is big brother reduce
     val list3Int: List[Int] = List(10, 20, 30)
-    list3Int.foldLeft("")(_ + _) shouldBe "102030"
+    list3Int.foldLeft("hello ")(_.toString + _) shouldBe "hello 102030"
 
     val emptyList: List[Int] = List.empty
-    emptyList.foldLeft("")(_ + _) shouldBe ""
+    emptyList.foldLeft("hello ")(_ + _) shouldBe "hello "
   }
 
   it should "List headOption numbers" in {
@@ -146,6 +162,31 @@ class ListSpec extends FlatSpec with Matchers {
     val listDeepNested0Int: List[List[List[Int]]] = List(List(List()))
     listDeepNested0Int.flatten shouldBe List(List())
 
+  }
+
+  it should "List match " in {
+    def myMatch(list: List[Int]) = list match {
+      case Nil => 1
+      case head :: _ => head
+    }
+
+    myMatch(Nil) shouldBe 1
+    myMatch(List(10, 20, 30)) shouldBe 10
+  }
+
+
+  it should " def finish on:" in {
+    case class Limon(value: String) {
+      def +++++:(otherValue: String): Limon = {
+        Limon(value + otherValue)
+      }
+    }
+    "otherValue" +++++: Limon("value ") shouldBe (Limon("value otherValue"))
+    Limon("value ").+++++:("otherValue") shouldBe (Limon("value otherValue"))
+
+    val left = 20 :: 30 :: Nil
+    val right = Nil.::(30).::(20)
+    left shouldBe right
   }
 
 

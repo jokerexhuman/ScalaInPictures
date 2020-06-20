@@ -157,5 +157,41 @@ class OptionSpec extends FlatSpec with Matchers {
 
   }
 
+  it should "Option match" in {
+
+    val someHello = Some("hello")
+    val someBye = Some("bye")
+
+    def transform(option: Option[String]) = option match {
+      case Some("hello") => 1
+      case Some("bye") => 2
+      case Some(_) => -1
+      case None => 0
+    }
+
+    def transform2(option: Option[String]) = option.map {
+      value =>
+        if (value == "hello") {
+          1
+        } else if (value == "bye") {
+          2
+        } else {
+          -1
+        }
+    }.getOrElse(0)
+
+    transform(someHello) shouldBe 1
+    transform(someBye) shouldBe 2
+    transform(Some("abracadabra")) shouldBe -1
+    transform(None) shouldBe 0
+
+
+    transform2(someHello) shouldBe 1
+    transform2(someBye) shouldBe 2
+    transform2(Some("abracadabra")) shouldBe -1
+    transform2(None) shouldBe 0
+
+
+  }
 
 }
