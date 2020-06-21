@@ -9,5 +9,5 @@
     - [For и синтаксический сахар](src/test/scala/SugarForSpec.scala)
     
 - Дополнительно
-    - [Предыдущая лекция](https://github.com/salamandraa/ScalaForLittle)
+    - [Предыдущая лекция: Scala для начинающих](https://github.com/salamandraa/ScalaForLittle)
     
